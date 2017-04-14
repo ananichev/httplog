@@ -45,7 +45,6 @@ module HttpLog
     def log_request(method, uri)
       return if config.compact_log || !config.log_request
       log("Sending: #{method.to_s.upcase} #{uri}")
-      log_caller
     end
 
     def log_headers(headers = {})
@@ -114,6 +113,7 @@ module HttpLog
       return unless config.compact_log
       status = Rack::Utils.status_code(status) unless status == /\d{3}/
       log("#{method.to_s.upcase} #{uri} completed with status code #{status} in #{seconds} seconds")
+      log_caller
     end
 
     def colorize(msg)
