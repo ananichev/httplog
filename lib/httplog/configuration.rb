@@ -17,7 +17,8 @@ module HttpLog
                   :color,
                   :prefix_data_lines,
                   :prefix_response_lines,
-                  :prefix_line_numbers
+                  :prefix_line_numbers,
+                  :caller_pattern
 
     def initialize
       @compact_log           = false
@@ -38,6 +39,7 @@ module HttpLog
       @prefix_data_lines     = false
       @prefix_response_lines = false
       @prefix_line_numbers   = false
+      @caller_pattern         = /.*/
     end
 
     # TODO: remove in 1.0.0

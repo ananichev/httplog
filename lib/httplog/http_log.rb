@@ -23,7 +23,7 @@ module HttpLog
     def configure
       yield(configuration)
     end
-    
+
     def url_approved?(url)
       return false if config.url_blacklist_pattern && url.to_s.match(config.url_blacklist_pattern)
       url.to_s.match(config.url_whitelist_pattern)
@@ -31,6 +31,10 @@ module HttpLog
 
     def log(msg)
       config.logger.log(config.severity, colorize(prefix + msg))
+    end
+
+    def log_caller
+      log("__Caller__: #{caller.find { |path| path =~ %r{#{config.caller_pattern}} } }")
     end
 
     def log_connection(host, port = nil)
@@ -41,6 +45,7 @@ module HttpLog
     def log_request(method, uri)
       return if config.compact_log || !config.log_request
       log("Sending: #{method.to_s.upcase} #{uri}")
+      log_caller
     end
 
     def log_headers(headers = {})
@@ -128,7 +133,7 @@ module HttpLog
       # This is a very naive way of determining if the content type is text-based; but
       # it will allow application/json and the like without having to resort to more
       # heavy-handed checks.
-      content_type =~ /^text/ || 
+      content_type =~ /^text/ ||
       content_type =~ /^application/ && content_type != 'application/octet-stream'
     end
 
