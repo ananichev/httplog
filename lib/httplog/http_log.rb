@@ -111,9 +111,9 @@ module HttpLog
 
     def log_compact(method, uri, status, seconds)
       return unless config.compact_log
+      return unless uri
       status = Rack::Utils.status_code(status) unless status == /\d{3}/
-      log("#{method.to_s.upcase} #{uri} completed with status code #{status} in #{seconds} seconds")
-      log_caller
+      log([uri, log_caller].join("|"))
     end
 
     def colorize(msg)
